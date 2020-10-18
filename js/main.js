@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const PINS_NUMBER = 8;
 const MAX_ROOMS = 10;
@@ -16,7 +16,7 @@ const pinTemplate = document.querySelector(`#pin`).content;
 const pinMark = pinTemplate.querySelector(`.map__pin`);
 const PINS_LIST_WIDTH = pinsList.scrollWidth;
 
-map.classList.remove(`map--faded`)
+map.classList.remove(`map--faded`);
 
 const getRandomValue = function (max, min = 0) {
   let rand = min + Math.random() * ((max + 1) - min);
@@ -41,7 +41,7 @@ const getNumberGen = () => {
   return () => {
     count++;
     return count;
-  }
+  };
 };
 
 const getAdvertisementNumber = getNumberGen();
@@ -59,24 +59,24 @@ const getPartialArray = (arr) => {
   return array;
 };
 
-const Author = class {
+const PinAuthor = class {
   constructor() {
     this.avatar = getFakeAvatar();
   }
 };
 
-const Location = class {
+const PinLocation = class {
   constructor() {
     this.x = getRandomValue(PINS_LIST_WIDTH);
     this.y = getRandomValue(630, 130);
   }
 };
 
-const Offer = class {
+const PinOffer = class {
   constructor() {
     this.title = `Метка объявления №${getAdvertisementNumber()}`;
     this.address = `${location.x}, ${location.y}`;
-    this.price =  getRandomValue(1000, 100);
+    this.price = getRandomValue(1000, 100);
     this.type = getRandomElement(HABITATION_TYPES);
     this.rooms = getRandomValue(MAX_ROOMS);
     this.guests = this.rooms * GUESTS_PER_ROOM;
@@ -90,11 +90,11 @@ const Offer = class {
 
 const Pin = class {
   constructor() {
-    this.author = new Author();
-    this.offer = new Offer();
-    this.location = new Location();
+    this.author = new PinAuthor();
+    this.offer = new PinOffer();
+    this.location = new PinLocation();
   }
-}
+};
 
 const getPins = () => {
   const pins = [];
@@ -102,7 +102,7 @@ const getPins = () => {
     pins.push(new Pin());
   }
   return pins;
-}
+};
 
 const renderPin = (pin) => {
   const newPin = pinMark.cloneNode(true);
