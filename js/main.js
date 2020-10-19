@@ -9,12 +9,16 @@ const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `condit
 const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
 const PIN_WIDTH = 65;
 const PIN_HEIGHT = 75;
+const POSITION_Y_MAX = 630;
+const POSITION_Y_MIN = 130;
+const MAX_PRICE = 200000;
+const MIN_PRICE = 10000;
 
 const map = document.querySelector(`.map`);
 const pinsList = document.querySelector(`.map__pins`);
+const pinsListWidth = pinsList.scrollWidth;
 const pinTemplate = document.querySelector(`#pin`).content;
 const pinMark = pinTemplate.querySelector(`.map__pin`);
-const PINS_LIST_WIDTH = pinsList.scrollWidth;
 
 map.classList.remove(`map--faded`);
 
@@ -29,8 +33,7 @@ const getAvatarFaker = () => {
   return () => {
     count++;
     const userNumberToString = count < 10 ? `0${count}` : `${count}`;
-    const avatar = `img/avatars/user${userNumberToString}.png`;
-    return avatar;
+    return `img/avatars/user${userNumberToString}.png`;
   };
 };
 
@@ -47,8 +50,7 @@ const getNumberGen = () => {
 const getAdvertisementNumber = getNumberGen();
 
 const getRandomElement = (arr) => {
-  const element = arr[getRandomValue(arr.length - 1)];
-  return element;
+  return arr[getRandomValue(arr.length - 1)];
 };
 
 const getPartialArray = (arr) => {
@@ -67,8 +69,8 @@ const PinAuthor = class {
 
 const PinLocation = class {
   constructor() {
-    this.x = getRandomValue(PINS_LIST_WIDTH);
-    this.y = getRandomValue(630, 130);
+    this.x = getRandomValue(pinsListWidth);
+    this.y = getRandomValue(POSITION_Y_MAX, POSITION_Y_MIN);
   }
 };
 
@@ -76,7 +78,7 @@ const PinOffer = class {
   constructor() {
     this.title = `Метка объявления №${getAdvertisementNumber()}`;
     this.address = `${location.x}, ${location.y}`;
-    this.price = getRandomValue(1000, 100);
+    this.price = getRandomValue(MAX_PRICE, MIN_PRICE);
     this.type = getRandomElement(HABITATION_TYPES);
     this.rooms = getRandomValue(MAX_ROOMS);
     this.guests = this.rooms * GUESTS_PER_ROOM;
