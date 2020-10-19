@@ -61,21 +61,29 @@ const getPartialArray = (arr) => {
   return array;
 };
 
-const PinAuthor = class {
+class PinAuthor {
   constructor() {
     this.avatar = getFakeAvatar();
   }
 };
 
-const PinLocation = class {
+class PinLocation {
   constructor() {
     this.x = getRandomValue(pinsListWidth);
     this.y = getRandomValue(POSITION_Y_MAX, POSITION_Y_MIN);
   }
 };
 
-const PinOffer = class {
+class Pin {
   constructor() {
+    this.author = new PinAuthor();
+    this.location = new PinLocation();
+    this.offer = new PinOffer(this.location);
+  }
+};
+
+class PinOffer {
+  constructor(location) {
     this.title = `Метка объявления №${getAdvertisementNumber()}`;
     this.address = `${location.x}, ${location.y}`;
     this.price = getRandomValue(MAX_PRICE, MIN_PRICE);
@@ -90,14 +98,6 @@ const PinOffer = class {
   }
 };
 
-const Pin = class {
-  constructor() {
-    this.author = new PinAuthor();
-    this.offer = new PinOffer();
-    this.location = new PinLocation();
-  }
-};
-
 const getPins = () => {
   const pins = [];
   for (let i = 0; i < PINS_NUMBER; i++) {
@@ -105,6 +105,8 @@ const getPins = () => {
   }
   return pins;
 };
+
+console.log(new Pin());
 
 const renderPin = (pin) => {
   const newPin = pinMark.cloneNode(true);
