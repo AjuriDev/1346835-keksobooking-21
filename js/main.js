@@ -106,8 +106,6 @@ const getPins = () => {
   return pins;
 };
 
-console.log(new Pin());
-
 const renderPin = (pin) => {
   const newPin = pinMark.cloneNode(true);
   newPin.style.left = `${pin.location.x - (PIN_WIDTH / 2)}px`;
