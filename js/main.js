@@ -65,14 +65,14 @@ class PinAuthor {
   constructor() {
     this.avatar = getFakeAvatar();
   }
-};
+}
 
 class PinLocation {
   constructor() {
     this.x = getRandomValue(pinsListWidth);
     this.y = getRandomValue(POSITION_Y_MAX, POSITION_Y_MIN);
   }
-};
+}
 
 class Pin {
   constructor() {
@@ -80,7 +80,7 @@ class Pin {
     this.location = new PinLocation();
     this.offer = new PinOffer(this.location);
   }
-};
+}
 
 class PinOffer {
   constructor(location) {
@@ -96,7 +96,7 @@ class PinOffer {
     this.description = `Тупо лучшее`;
     this.photos = getPartialArray(PHOTOS);
   }
-};
+}
 
 const getPins = () => {
   const pins = [];
