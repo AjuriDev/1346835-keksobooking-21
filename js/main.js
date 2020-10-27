@@ -1,18 +1,18 @@
 'use strict';
 
-// const PINS_NUMBER = 8;
-// const MAX_ROOMS = 10;
-// const GUESTS_PER_ROOM = 3;
-// const HABITATION_TYPES = [`palace`, `flat`, `house`, `bungalow`];
-// const CHECK_TIMES = [`12:00`, `13:00`, `14:00`];
-// const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
-// const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
+const PINS_NUMBER = 8;
+const MAX_ROOMS = 10;
+const GUESTS_PER_ROOM = 3;
+const HABITATION_TYPES = [`palace`, `flat`, `house`, `bungalow`];
+const CHECK_TIMES = [`12:00`, `13:00`, `14:00`];
+const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
+const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
 const PIN_SIZE = 65;
-// const PIN_PROTRUSION_HEIGHT = 10;
-// const POSITION_Y_MAX = 630;
-// const POSITION_Y_MIN = 130;
-// const MAX_PRICE = 200000;
-// const MIN_PRICE = 10000;
+const PIN_PROTRUSION_HEIGHT = 10;
+const POSITION_Y_MAX = 630;
+const POSITION_Y_MIN = 130;
+const MAX_PRICE = 200000;
+const MIN_PRICE = 10000;
 const HABITATION_TYPES_RU = {
   palace: {
     name: `Дворец`,
@@ -33,249 +33,134 @@ const HABITATION_TYPES_RU = {
 };
 
 const map = document.querySelector(`.map`);
-// const pinsList = map.querySelector(`.map__pins`);
-// const pinsFilter = map.querySelector(`.map__filters-container`);
-// const pinsListWidth = pinsList.scrollWidth;
-// const pinTemplate = document.querySelector(`#pin`).content;
-// const pinMark = pinTemplate.querySelector(`.map__pin`);
+const pinsList = map.querySelector(`.map__pins`);
+const pinsFilter = map.querySelector(`.map__filters-container`);
+const pinsListWidth = pinsList.scrollWidth;
+const pinTemplate = document.querySelector(`#pin`).content;
+const pinMark = pinTemplate.querySelector(`.map__pin`);
 // const cardTemplate = document.querySelector(`#card`).content;
 // const pinCard = cardTemplate.querySelector(`.map__card`);
 const adForm = document.querySelector(`.ad-form`);
 const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
+const mapFilterFieldsets = pinsFilter.querySelectorAll(`fieldset`);
 const mainPin = map.querySelector(`.map__pin--main`);
 const adAddressInput = adForm.querySelector(`#address`);
 const adTypeInput = adForm.querySelector(`#type`);
 const adPriceInput = adForm.querySelector(`#price`);
 
-const mainPinAddress = {
-  x: Math.round(Number(mainPin.style.left.slice(0, -2)) + PIN_SIZE / 2), // метод slice вызван чтобы удалить "px" из конца строки
-  y: Math.round(Number(mainPin.style.top.slice(0, -2)) + PIN_SIZE / 2)
+// ================================================================================
+// Задание 3 часть 1
+// ================================================================================
+
+const getRandomValue = function (max, min = 0) {
+  let rand = min + Math.random() * ((max + 1) - min);
+  return Math.floor(rand);
 };
 
-// map.classList.remove(`map--faded`);
+const getAvatarFaker = () => {
+  let count = 0;
 
-const onAdPriceInputChangeValue = () => {
-  const habitationType = adTypeInput.value;
-  const adPrice = Number(adPriceInput.value);
+  return () => {
+    count++;
+    const userNumberToString = count < 10 ? `0${count}` : `${count}`;
+    return `img/avatars/user${userNumberToString}.png`;
+  };
+};
 
-  switch (habitationType) {
-    case `bungalow`:
-      if (adPrice < HABITATION_TYPES_RU[habitationType].minPrice) {
-        adPriceInput.setCustomValidity(`Минимальная цена за ночь 0р`);
-        break;
-      } else {
-        adPriceInput.setCustomValidity(``);
-        break;
-      }
-    case `flat`:
-      if (adPrice < HABITATION_TYPES_RU[habitationType].minPrice) {
-        adPriceInput.setCustomValidity(`Минимальная цена за ночь 1000р`);
-        break;
-      } else {
-        adPriceInput.setCustomValidity(``);
-        break;
-      }
-    case `house`:
-      if (adPrice < HABITATION_TYPES_RU[habitationType].minPrice) {
-        adPriceInput.setCustomValidity(`Минимальная цена за ночь 5000р`);
-        break;
-      } else {
-        adPriceInput.setCustomValidity(``);
-        break;
-      }
-    case `palace`:
-      if (adPrice < HABITATION_TYPES_RU[habitationType].minPrice) {
-        adPriceInput.setCustomValidity(`Минимальная цена за ночь 10000р`);
-        break;
-      } else {
-        adPriceInput.setCustomValidity(``);
-        break;
-      }
-    default:
-      adPriceInput.setCustomValidity(`Что-то пошло не так`);
-      break;
+const getFakeAvatar = getAvatarFaker();
+
+const getNumberGen = () => {
+  let count = 0;
+  return () => {
+    count++;
+    return count;
+  };
+};
+
+const getAdvertisementNumber = getNumberGen();
+
+const getRandomElement = (arr) => {
+  return arr[getRandomValue(arr.length - 1)];
+};
+
+const getPartialArray = (arr) => {
+  const array = [];
+  for (let i = 0; i <= getRandomValue(arr.length - 1); i++) {
+    array.push(arr[i]);
   }
-
-  adPriceInput.reportValidity();
+  return array;
 };
 
-const onAdTypeInputChangeValue = () => {
-  const habitationType = adTypeInput.value;
-
-  switch (habitationType) {
-    case `bungalow`:
-      adPriceInput.min = 0;
-      adPriceInput.placeholder = 0;
-      break;
-    case `flat`:
-      adPriceInput.min = 1000;
-      adPriceInput.placeholder = 1000;
-      break;
-    case `house`:
-      adPriceInput.min = 5000;
-      adPriceInput.placeholder = 5000;
-      break;
-    case `palace`:
-      adPriceInput.setCustomValidity(`Минимальная цена за ночь 10000р`);
-      adPriceInput.min = 10000;
-      adPriceInput.placeholder = 10000;
-      break;
-    default:
-      break;
+class PinAuthor {
+  constructor() {
+    this.avatar = getFakeAvatar();
   }
+}
 
-  adTypeInput.reportValidity();
-};
-
-adPriceInput.addEventListener(`input`, onAdPriceInputChangeValue);
-adTypeInput.addEventListener(`input`, onAdTypeInputChangeValue);
-
-const disableAdFormFieldsets = () => {
-  for (let i = 0; i < adFormFieldsets.length; i++) {
-    adFormFieldsets[i].setAttribute(`disabled`, ``);
+class PinLocation {
+  constructor() {
+    this.x = getRandomValue(pinsListWidth);
+    this.y = getRandomValue(POSITION_Y_MAX, POSITION_Y_MIN);
   }
-};
+}
 
-disableAdFormFieldsets();
-
-const blockEditadAddress = () => {
-  adAddressInput.setAttribute(`readonly`, ``);
-};
-
-blockEditadAddress();
-
-const turnOnAdFormFieldsets = () => {
-  for (let i = 0; i < adFormFieldsets.length; i++) {
-    adFormFieldsets[i].removeAttribute(`disabled`);
+class Pin {
+  constructor() {
+    this.author = new PinAuthor();
+    this.location = new PinLocation();
+    this.offer = new PinOffer(this.location);
   }
+}
+
+class PinOffer {
+  constructor(location) {
+    this.title = `Метка объявления №${getAdvertisementNumber()}`;
+    this.address = `${location.x}, ${location.y}`;
+    this.price = getRandomValue(MAX_PRICE, MIN_PRICE);
+    this.type = getRandomElement(HABITATION_TYPES);
+    this.rooms = getRandomValue(MAX_ROOMS);
+    this.guests = this.rooms * GUESTS_PER_ROOM;
+    this.checkin = getRandomElement(CHECK_TIMES);
+    this.checkout = getRandomElement(CHECK_TIMES);
+    this.features = getPartialArray(FEATURES);
+    this.description = `Тупо лучшее`;
+    this.photos = getPartialArray(PHOTOS);
+  }
+}
+
+const getPins = () => {
+  const pins = [];
+  for (let i = 0; i < PINS_NUMBER; i++) {
+    pins.push(new Pin());
+  }
+  return pins;
 };
 
-mainPin.addEventListener(`mousedown`, function (evt) {
-  evt.preventDefault();
-  if (evt.button === 0) {
-    turnOnAdFormFieldsets();
-  }
-});
-
-mainPin.addEventListener(`keydown`, function (evt) {
-  evt.preventDefault();
-  if (evt.key === `Enter`) {
-    turnOnAdFormFieldsets();
-  }
-});
-
-const setAdAddress = (obj) => {
-  adAddressInput.value = `${obj.x}, ${obj.y}`;
+const renderPin = (pin) => {
+  const newPin = pinMark.cloneNode(true);
+  newPin.style.left = `${pin.location.x - (PIN_SIZE / 2)}px`;
+  newPin.style.top = `${pin.location.y - (PIN_SIZE / 2 + PIN_PROTRUSION_HEIGHT)}px`;
+  newPin.querySelector(`img`).src = pin.author.avatar;
+  newPin.querySelector(`img`).alt = pin.offer.title;
+  return newPin;
 };
 
-setAdAddress(mainPinAddress);
+const createFragment = function (array, callback) {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < array.length; i++) {
+    fragment.appendChild(callback(array[i]));
+  }
+  return fragment;
+};
 
-// const getRandomValue = function (max, min = 0) {
-//   let rand = min + Math.random() * ((max + 1) - min);
-//   return Math.floor(rand);
-// };
-//
-// const getAvatarFaker = () => {
-//   let count = 0;
-//
-//   return () => {
-//     count++;
-//     const userNumberToString = count < 10 ? `0${count}` : `${count}`;
-//     return `img/avatars/user${userNumberToString}.png`;
-//   };
-// };
-//
-// const getFakeAvatar = getAvatarFaker();
-//
-// const getNumberGen = () => {
-//   let count = 0;
-//   return () => {
-//     count++;
-//     return count;
-//   };
-// };
-//
-// const getAdvertisementNumber = getNumberGen();
-//
-// const getRandomElement = (arr) => {
-//   return arr[getRandomValue(arr.length - 1)];
-// };
-//
-// const getPartialArray = (arr) => {
-//   const array = [];
-//   for (let i = 0; i <= getRandomValue(arr.length - 1); i++) {
-//     array.push(arr[i]);
-//   }
-//   return array;
-// };
-//
-// class PinAuthor {
-//   constructor() {
-//     this.avatar = getFakeAvatar();
-//   }
-// }
-//
-// class PinLocation {
-//   constructor() {
-//     this.x = getRandomValue(pinsListWidth);
-//     this.y = getRandomValue(POSITION_Y_MAX, POSITION_Y_MIN);
-//   }
-// }
-//
-// class Pin {
-//   constructor() {
-//     this.author = new PinAuthor();
-//     this.location = new PinLocation();
-//     this.offer = new PinOffer(this.location);
-//   }
-// }
-//
-// class PinOffer {
-//   constructor(location) {
-//     this.title = `Метка объявления №${getAdvertisementNumber()}`;
-//     this.address = `${location.x}, ${location.y}`;
-//     this.price = getRandomValue(MAX_PRICE, MIN_PRICE);
-//     this.type = getRandomElement(HABITATION_TYPES);
-//     this.rooms = getRandomValue(MAX_ROOMS);
-//     this.guests = this.rooms * GUESTS_PER_ROOM;
-//     this.checkin = getRandomElement(CHECK_TIMES);
-//     this.checkout = getRandomElement(CHECK_TIMES);
-//     this.features = getPartialArray(FEATURES);
-//     this.description = `Тупо лучшее`;
-//     this.photos = getPartialArray(PHOTOS);
-//   }
-// }
+const pins = getPins();
 
-// const getPins = () => {
-//   const pins = [];
-//   for (let i = 0; i < PINS_NUMBER; i++) {
-//     pins.push(new Pin());
-//   }
-//   return pins;
-// };
+const pinsFragment = createFragment(pins, renderPin);
 
-// const pins = getPins();
 
-// const renderPin = (pin) => {
-//   const newPin = pinMark.cloneNode(true);
-//   newPin.style.left = `${pin.location.x - (PIN_SIZE / 2)}px`;
-//   newPin.style.top = `${pin.location.y - (PIN_SIZE / 2)}px`;
-//   newPin.querySelector(`img`).src = pin.author.avatar;
-//   newPin.querySelector(`img`).alt = pin.offer.title;
-//   return newPin;
-// };
-
-// const createFragment = function (array, callback) {
-//   const fragment = document.createDocumentFragment();
-//   for (let i = 0; i < array.length; i++) {
-//     fragment.appendChild(callback(array[i]));
-//   }
-//   return fragment;
-// };
-
-// const pinsFragment = createFragment(pins, renderPin);
-
-// pinsList.appendChild(pinsFragment);
+// ================================================================================
+// Задание 3 часть 2
+// ================================================================================
 
 // const editNode = (parent, childClass, property, value) => {
 //   if (value) {
@@ -349,3 +234,104 @@ setAdAddress(mainPinAddress);
 
 // console.log(renderPinCard(pins[0]));
 // map.insertBefore(renderPinCard(pins[0]), pinsFilter);
+
+
+// ================================================================================
+// Задание 4 часть 1
+// ================================================================================
+
+const mainPinAddress = {
+  x: Math.round(Number(mainPin.style.left.slice(0, -2)) + PIN_SIZE / 2), // метод slice вызван чтобы удалить "px" из конца строки
+  y: Math.round(Number(mainPin.style.top.slice(0, -2)) + PIN_SIZE / 2)
+};
+
+const onAdPriceInputChangeValue = () => {
+  const habitationType = adTypeInput.value;
+  const adPrice = Number(adPriceInput.value);
+
+  if (adPrice < HABITATION_TYPES_RU[habitationType].minPrice) {
+    adPriceInput.setCustomValidity(`Минимальная цена за ночь ${HABITATION_TYPES_RU[habitationType].minPrice}р`);
+  } else {
+    adPriceInput.setCustomValidity(``);
+  }
+
+  adPriceInput.reportValidity();
+};
+
+const onAdTypeInputChangeValue = () => {
+  const habitationType = adTypeInput.value;
+
+  adPriceInput.min = HABITATION_TYPES_RU[habitationType].minPrice;
+  adPriceInput.placeholder = HABITATION_TYPES_RU[habitationType].minPrice;
+
+  adTypeInput.reportValidity();
+};
+
+const blockEditadAddress = () => {
+  adAddressInput.setAttribute(`readonly`, ``);
+};
+
+const disableAdFormFieldsets = () => {
+  for (let i = 0; i < adFormFieldsets.length; i++) {
+    adFormFieldsets[i].setAttribute(`disabled`, ``);
+  }
+};
+
+const disableMapFilterFieldsets = () => {
+  for (let i = 0; i < mapFilterFieldsets.length; i++) {
+    mapFilterFieldsets[i].setAttribute(`disabled`, ``);
+  }
+};
+
+const turnOnAdFormFieldsets = () => {
+  for (let i = 0; i < adFormFieldsets.length; i++) {
+    adFormFieldsets[i].removeAttribute(`disabled`);
+  }
+};
+
+const turnOnMapFilterFieldsets = () => {
+  for (let i = 0; i < mapFilterFieldsets.length; i++) {
+    mapFilterFieldsets[i].removeAttribute(`disabled`);
+  }
+};
+
+const setAdAddress = (obj) => {
+  adAddressInput.value = `${obj.x}, ${obj.y}`;
+};
+
+const initializeMainPage = () => {
+  disableMapFilterFieldsets();
+  disableAdFormFieldsets();
+  blockEditadAddress();
+  setAdAddress(mainPinAddress);
+};
+
+const activateMainPage = () => {
+  pinsList.appendChild(pinsFragment);
+  map.classList.remove(`map--faded`);
+  turnOnAdFormFieldsets();
+  turnOnMapFilterFieldsets();
+};
+
+initializeMainPage();
+
+adPriceInput.addEventListener(`input`, onAdPriceInputChangeValue);
+adTypeInput.addEventListener(`input`, onAdTypeInputChangeValue);
+
+mainPin.addEventListener(`mousedown`, function (evt) {
+  evt.preventDefault();
+  if (evt.button === 0) {
+    activateMainPage();
+  }
+});
+
+mainPin.addEventListener(`keydown`, function (evt) {
+  evt.preventDefault();
+  if (evt.key === `Enter`) {
+    activateMainPage();
+  }
+});
+
+// ================================================================================
+// Задание 4 часть 2
+// ================================================================================
