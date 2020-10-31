@@ -218,18 +218,18 @@ const editGallery = (parent, photos) => {
   }
 };
 
-const renderPinCard = (pin, pinCard) => {
+const renderPinCard = (pin, card) => {
   // const newPinCard = pinCard.cloneNode(true);
-  const featureList = pinCard.querySelector(`.popup__features`);
-  const gallery = pinCard.querySelector(`.popup__photos`);
-  editNode(pinCard, `popup__title`, `textContent`, pin.offer.title);
-  editNode(pinCard, `popup__text--address`, `textContent`, pin.offer.address);
-  editNode(pinCard, `popup__text--price`, `textContent`, `${pin.offer.price}₽/ночь`);
-  editNode(pinCard, `popup__type`, `textContent`, `${HABITATION_TYPES_RU[pin.offer.type].name}`);
-  editNode(pinCard, `popup__text--capacity`, `textContent`, `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`);
-  editNode(pinCard, `popup__text--time`, `textContent`, `Заезд после ${pin.offer.checkin}, выезд до ${pin.offer.checkout}`);
-  editNode(pinCard, `popup__description`, `textContent`, pin.offer.description);
-  editNode(pinCard, `popup__avatar`, `src`, pin.author.avatar);
+  const featureList = card.querySelector(`.popup__features`);
+  const gallery = card.querySelector(`.popup__photos`);
+  editNode(card, `popup__title`, `textContent`, pin.offer.title);
+  editNode(card, `popup__text--address`, `textContent`, pin.offer.address);
+  editNode(card, `popup__text--price`, `textContent`, `${pin.offer.price}₽/ночь`);
+  editNode(card, `popup__type`, `textContent`, `${HABITATION_TYPES_RU[pin.offer.type].name}`);
+  editNode(card, `popup__text--capacity`, `textContent`, `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`);
+  editNode(card, `popup__text--time`, `textContent`, `Заезд после ${pin.offer.checkin}, выезд до ${pin.offer.checkout}`);
+  editNode(card, `popup__description`, `textContent`, pin.offer.description);
+  editNode(card, `popup__avatar`, `src`, pin.author.avatar);
   editFeaturesList(featureList, pin.offer.features);
   editGallery(gallery, pin.offer.photos);
 };
@@ -274,14 +274,13 @@ const onAdTypeInputChangeValue = () => {
 };
 
 const synchronizeTimeInputs = function (firstInput, secondInput) {
-  const onInputSynchronize = function (input) {
-    return function () {
-      input.value = this.value;
-    }
-  };
+  firstInput.addEventListener(`change`, function () {
+    secondInput.selectedIndex = firstInput.selectedIndex;
+  });
 
-  firstInput.addEventListener(`input`, onInputSynchronize(secondInput));
-  secondInput.addEventListener(`input`, onInputSynchronize(firstInput));
+  secondInput.addEventListener(`change`, function () {
+    firstInput.selectedIndex = secondInput.selectedIndex;
+  });
 };
 
 const synchronizeGuestsToRooms = function (guestInput, roomInput) {
@@ -384,21 +383,21 @@ const showPinCard = () => {
     const mark = evt.target.closest(`.map__pin`);
     if (mark && !mark.classList.contains(`map__pin--main`)) {
       const closePinCard = pinCard.querySelector(`.popup__close`);
-      const removePinCard = (evt) => {
-        return () => {
-          evt.preventDefault();
-          pinCard.remove();
-          closePinCard.removeEventListener(`click`, onClosePinCardClick);
-          document.removeEventListener(`keydown`, onClosePinCardEscPress);
-        };
+      const removePinCard = () => {
+        pinCard.remove();
+        closePinCard.removeEventListener(`click`, onClosePinCardClick);
+        document.removeEventListener(`keydown`, onClosePinCardEscPress);
       };
 
-      const onClosePinCardClick = removePinCard(evt);
+      const onClosePinCardClick = () => {
+        evt.preventDefault();
+        removePinCard();
+      };
 
-      const onClosePinCardEscPress = (evt) => {
-        if (evt.key === 'Escape') {
+      const onClosePinCardEscPress = () => {
+        if (evt.key === `Escape`) {
           evt.preventDefault();
-          removePinCard(evt)();
+          removePinCard();
         }
       };
 
@@ -409,8 +408,7 @@ const showPinCard = () => {
       document.addEventListener(`keydown`, onClosePinCardEscPress);
 
       const markAvatarAlt = mark.querySelector(`img`).alt;
-      const pin = pins.find(pin => pin.offer.title === markAvatarAlt);
-      renderPinCard(pin, pinCard);
+      renderPinCard(pins.find((pin) => pin.offer.title === markAvatarAlt), pinCard);
       map.insertBefore(pinCard, pinsFilter);
     }
   });
