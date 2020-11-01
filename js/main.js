@@ -284,12 +284,13 @@ const synchronizeTimeInputs = function (firstInput, secondInput) {
 };
 
 const synchronizeGuestsToRooms = function (guestInput, roomInput) {
+
   const onGuestInputChangeValue = () => {
     const room = Number(roomInput.value);
     const guest = Number(guestInput.value);
     if (room > MAX_ROOMS_FOR_GUESTS && guest !== 0) {
       guestInput.setCustomValidity(`Выбранное помещение не для гостей`);
-    } else if (room < MAX_ROOMS_FOR_GUESTS && guest === 0) {
+    } else if (room <= MAX_ROOMS_FOR_GUESTS && guest === 0) {
       guestInput.setCustomValidity(`Выбранное помещение предусмотрено для гостей`);
     } else if (room < guest) {
       guestInput.setCustomValidity(`Максимальное число гостей ${room}`);
@@ -300,7 +301,42 @@ const synchronizeGuestsToRooms = function (guestInput, roomInput) {
     guestInput.reportValidity();
   };
 
-  guestInput.addEventListener(`input`, onGuestInputChangeValue);
+  const onRoomsInputChangeValue = () => {
+    const room = Number(roomInput.value);
+    const guest = Number(guestInput.value);
+    const guestInputOptions = guestInput.querySelectorAll(`option`);
+
+    if (room < guest && room <= MAX_ROOMS_FOR_GUESTS) {
+      guestInput.setCustomValidity(`Максимальное число гостей ${room}`);
+    } else if (room <= MAX_ROOMS_FOR_GUESTS && guest === 0) {
+      guestInput.setCustomValidity(`Выбранное помещение предусмотрено для гостей`);
+    } else if (room > MAX_ROOMS_FOR_GUESTS && guest !== 0) {
+      guestInput.setCustomValidity(`Выбранное помещение не для гостей`);
+    } else {
+      guestInput.setCustomValidity(``);
+    }
+
+    guestInputOptions.forEach((option) => {
+      option.removeAttribute(`disabled`);
+    });
+
+    if (room <= MAX_ROOMS_FOR_GUESTS) {
+      guestInputOptions.forEach((option) => {
+        if (option.value > room || Number(option.value) === 0) {
+          option.setAttribute(`disabled`, `disabled`);
+        }
+      });
+    } else {
+      guestInputOptions.forEach((option) => {
+        if (Number(option.value) !== 0) {
+          option.setAttribute(`disabled`, `disabled`);
+        }
+      });
+    }
+  };
+
+  guestInput.addEventListener(`change`, onGuestInputChangeValue);
+  roomInput.addEventListener(`change`, onRoomsInputChangeValue);
 };
 
 synchronizeGuestsToRooms(adGuestsInput, adRoomsInput);
@@ -394,8 +430,8 @@ const showPinCard = () => {
         removePinCard();
       };
 
-      const onClosePinCardEscPress = () => {
-        if (evt.key === `Escape`) {
+      const onClosePinCardEscPress = (e) => {
+        if (e.key === `Escape`) {
           evt.preventDefault();
           removePinCard();
         }
