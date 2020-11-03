@@ -80,9 +80,9 @@
   };
 
   window.map = {
-    mainPin: mainPin,
-    disableMapForm: disableMapForm,
-    activateMapForm: activateMapForm,
-    showPinCard: showPinCard
+    mainPin,
+    disableMapForm,
+    activateMapForm,
+    showPinCard
   };
 })();

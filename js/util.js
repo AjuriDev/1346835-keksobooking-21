@@ -50,12 +50,12 @@
   };
 
   window.util = {
-    getRandomValue: getRandomValue,
-    isEscEvent: isEscEvent,
-    isEnterEvent: isEnterEvent,
-    getNumberGen: getNumberGen,
-    getRandomElement: getRandomElement,
-    getPartialArray: getPartialArray,
-    createFragment: createFragment
+    getRandomValue,
+    isEscEvent,
+    isEnterEvent,
+    getNumberGen,
+    getRandomElement,
+    getPartialArray,
+    createFragment
   };
 })();

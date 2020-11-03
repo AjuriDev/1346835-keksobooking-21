@@ -149,7 +149,7 @@
   };
 
   window.form = {
-    initializeAdForm: initializeAdForm,
-    activateAdForm: activateAdForm
+    initializeAdForm,
+    activateAdForm
   };
 })();

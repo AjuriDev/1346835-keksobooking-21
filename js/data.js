@@ -80,8 +80,8 @@
   const generatedPins = getPins();
 
   window.data = {
-    map: map,
-    pinsList: pinsList,
-    generatedPins: generatedPins
+    map,
+    pinsList,
+    generatedPins
   };
 })();

@@ -88,7 +88,7 @@
   };
 
   window.card = {
-    renderPinCard: renderPinCard,
-    habitationTypesRu: HABITATION_TYPES_RU
+    renderPinCard,
+    HABITATION_TYPES_RU
   };
 })();
