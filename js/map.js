@@ -9,6 +9,8 @@
   const pinCard = cardTemplate.querySelector(`.map__card`);
   const mainPin = map.querySelector(`.map__pin--main`);
 
+  mainPin.addEventListener(`mousedown`, window.move.onMainPinMove);
+
   const pinsFragment = window.util.createFragment(window.data.generatedPins, window.pin.renderPin);
 
   const disableMapForm = () => {

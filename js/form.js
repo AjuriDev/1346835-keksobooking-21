@@ -14,11 +14,6 @@
   const adGuestsInput = adForm.querySelector(`#capacity`);
   const mainPin = window.map.mainPin;
 
-  const mainPinAddress = {
-    x: Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.pinSize / 2), // метод slice вызван чтобы удалить "px" из конца строки
-    y: Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.pinSize / 2)
-  };
-
   const disableAdFormFieldsets = () => {
     for (let i = 0; i < adFormFieldsets.length; i++) {
       adFormFieldsets[i].setAttribute(`disabled`, ``);
@@ -29,14 +24,18 @@
     adAddressInput.setAttribute(`readonly`, ``);
   };
 
-  const setAdAddress = (obj) => {
-    adAddressInput.value = `${obj.x}, ${obj.y}`;
+  const setAdAddress = (active = true) => {
+    if (active) {
+      adAddressInput.value = `${Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.pinSize / 2)}, ${Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.pinSize + window.pin.pinProtrusionHeight)}`;
+    } else {
+      adAddressInput.value = `${Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.pinSize / 2)}, ${Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.pinSize / 2)}`;
+    }
   };
 
   const initializeAdForm = () => {
     disableAdFormFieldsets();
     blockEditadAddress();
-    setAdAddress(mainPinAddress);
+    setAdAddress(false);
   };
 
   const turnOnAdFormFieldsets = () => {
@@ -150,6 +149,7 @@
 
   window.form = {
     initializeAdForm,
-    activateAdForm
+    activateAdForm,
+    setAdAddress
   };
 })();

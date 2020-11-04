@@ -82,6 +82,9 @@
   window.data = {
     map,
     pinsList,
-    generatedPins
+    generatedPins,
+    pinsListWidth,
+    positionYMax: POSITION_Y_MAX,
+    positionYMin: POSITION_Y_MIN,
   };
 })();
