@@ -1,6 +1,11 @@
 'use strict';
 (function () {
 
+  const POSITION_Y_MAX = 630;
+  const POSITION_Y_MIN = 130;
+
+  const pinsListWidth = window.util.pinsList.scrollWidth;
+
   const onMainPinMove = (evt) => {
 
     const mainPin = window.map.mainPin;
@@ -23,23 +28,23 @@
       startCoords.x = moveEvt.clientX;
       startCoords.y = moveEvt.clientY;
 
-      if (mainPin.offsetTop + window.pin.pinSize + window.pin.pinProtrusionHeight < window.data.positionYMin) {
-        mainPin.style.top = `${window.data.positionYMin - window.pin.pinSize - window.pin.pinProtrusionHeight}px`;
-      } else if (mainPin.offsetTop + window.pin.pinSize + window.pin.pinProtrusionHeight > window.data.positionYMax) {
-        mainPin.style.top = `${window.data.positionYMax - window.pin.pinSize - window.pin.pinProtrusionHeight}px`;
+      if (mainPin.offsetTop + window.pin.pinSize + window.pin.pinProtrusionHeight < POSITION_Y_MIN) {
+        mainPin.style.top = `${POSITION_Y_MIN - window.pin.pinSize - window.pin.pinProtrusionHeight}px`;
+      } else if (mainPin.offsetTop + window.pin.pinSize + window.pin.pinProtrusionHeight > POSITION_Y_MAX) {
+        mainPin.style.top = `${POSITION_Y_MAX - window.pin.pinSize - window.pin.pinProtrusionHeight}px`;
       } else {
         mainPin.style.top = `${mainPin.offsetTop - shift.y}px`;
       }
 
       if (mainPin.offsetLeft + Math.ceil(window.pin.pinSize / 2) < 0) {
         mainPin.style.left = `${0 - Math.ceil(window.pin.pinSize / 2)}px`;
-      } else if (mainPin.offsetLeft + Math.ceil(window.pin.pinSize / 2) > window.data.pinsListWidth) {
-        mainPin.style.left = `${window.data.pinsListWidth - Math.ceil(window.pin.pinSize / 2)}px`;
+      } else if (mainPin.offsetLeft + Math.ceil(window.pin.pinSize / 2) > pinsListWidth) {
+        mainPin.style.left = `${pinsListWidth - Math.ceil(window.pin.pinSize / 2)}px`;
       } else {
         mainPin.style.left = `${mainPin.offsetLeft - shift.x}px`;
       }
 
-      window.form.setAdAddress();
+      window.form.setAdAddress(true);
 
     };
 
