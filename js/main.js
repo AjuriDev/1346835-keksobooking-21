@@ -6,7 +6,14 @@
     window.form.initializeAdForm();
   };
 
+  const activateMainPage = (arr) => {
+    window.map.activateMapForm(arr);
+    window.form.activateAdForm();
+  };
+
   initializeMainPage();
 
-  window.map.showPinCard();
+  window.main = {
+    activateMainPage
+  };
 })();

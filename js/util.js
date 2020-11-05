@@ -4,6 +4,9 @@
   const ESC_KEYCODE = 27;
   const ENTER_KEYCODE = 13;
 
+  const map = document.querySelector(`.map`);
+  const pinsList = map.querySelector(`.map__pins`);
+
   const getRandomValue = (max, min = 0) => {
     let rand = min + Math.random() * ((max + 1) - min);
     return Math.floor(rand);
@@ -56,6 +59,8 @@
     getNumberGen,
     getRandomElement,
     getPartialArray,
-    createFragment
+    createFragment,
+    map,
+    pinsList
   };
 })();
