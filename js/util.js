@@ -12,16 +12,22 @@
     return Math.floor(rand);
   };
 
-  const isEscEvent = function (evt, action) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      action();
-    }
+  const isEscEvent = function (action) {
+    return (evt) => {
+      evt.preventDefault();
+      if (evt.keyCode === ESC_KEYCODE) {
+        action();
+      }
+    };
   };
 
-  const isEnterEvent = function (evt, action) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      action();
-    }
+  const isEnterEvent = function (action) {
+    return (evt) => {
+      evt.preventDefault();
+      if (evt.keyCode === ENTER_KEYCODE) {
+        action();
+      }
+    };
   };
 
   const getNumberGen = () => {

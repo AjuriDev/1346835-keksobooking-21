@@ -13,6 +13,15 @@
   const adRoomsInput = adForm.querySelector(`#room_number`);
   const adGuestsInput = adForm.querySelector(`#capacity`);
   const mainPin = window.map.mainPin;
+  const successMessage = document.querySelector(`#success`).content.querySelector(`.success`);
+  const errorMessage = document.querySelector(`#error`).content.querySelector(`.error`);
+  const btnResetForm = adForm.querySelector(`.ad-form__reset`);
+
+  const onbtnResetFormResetPage = (evt) => {
+    evt.preventDefault();
+    window.main.initializeMainPage();
+    btnResetForm.removeEventListener(`click`, onbtnResetFormResetPage);
+  };
 
   const disableAdFormFieldsets = () => {
     for (let i = 0; i < adFormFieldsets.length; i++) {
@@ -33,6 +42,8 @@
   };
 
   const initializeAdForm = () => {
+    adForm.reset();
+    adForm.classList.add(`ad-form--disabled`);
     disableAdFormFieldsets();
     blockEditadAddress();
     setAdAddress(false);
@@ -137,14 +148,73 @@
     roomInput.addEventListener(`change`, onRoomsInputChangeValue);
   };
 
+  const removeMessage = (message, onMessageClick, onMessageEscClose) => {
+    message.remove();
+    document.removeEventListener(`click`, onMessageClick);
+    document.removeEventListener(`keydown`, onMessageEscClose);
+  };
+
+  const onSuccessMessageClick = (evt) => {
+    evt.preventDefault();
+    removeMessage(successMessage, onSuccessMessageClick, onSuccessMessageEscClose);
+  };
+
+  const onSuccessMessageEscClose = (evt) => {
+    evt.preventDefault();
+    if (evt.key === `Escape`) {
+      removeMessage(successMessage, onSuccessMessageClick, onSuccessMessageEscClose);
+    }
+  };
+
+  const onErrorMessageClick = (evt) => {
+    evt.preventDefault();
+    removeMessage(errorMessage, onErrorMessageClick, onErrorMessageEscClose);
+  };
+
+  const onErrorMessageEscClose = (evt) => {
+    evt.preventDefault();
+    if (evt.key === `Escape`) {
+      removeMessage(errorMessage, onErrorMessageClick, onErrorMessageEscClose);
+    }
+  };
+
+  const showSuccessMessage = () => {
+    document.querySelector(`main`).insertAdjacentElement(`afterbegin`, successMessage);
+    document.addEventListener(`click`, onSuccessMessageClick);
+    document.addEventListener(`keydown`, onSuccessMessageEscClose);
+  };
+
+  const showErrorMessage = () => {
+    document.querySelector(`main`).insertAdjacentElement(`afterbegin`, errorMessage);
+    document.addEventListener(`click`, onErrorMessageClick);
+    document.addEventListener(`keydown`, onErrorMessageEscClose);
+  };
+
+  const successHandler = () => {
+    window.main.initializeMainPage();
+    showSuccessMessage();
+  };
+
+  const errorHandler = () => {
+    showErrorMessage();
+  };
+
+  const onAdFormSubmit = (evt) => {
+    evt.preventDefault();
+    const form = evt.target.closest(`.ad-form`);
+    window.upload.sendAdForm(new FormData(form), successHandler, errorHandler);
+  };
+
   const activateAdForm = () => {
     setInputsValues();
     adForm.classList.remove(`ad-form--disabled`);
+    adForm.addEventListener(`submit`, onAdFormSubmit);
     turnOnAdFormFieldsets();
     synchronizeTimeInputs(adTimeInInput, adTimeOutInput);
     synchronizeGuestsToRooms(adGuestsInput, adRoomsInput);
     adPriceInput.addEventListener(`input`, onAdPriceInputChangeValue);
     adTypeInput.addEventListener(`input`, onAdTypeInputChangeValue);
+    btnResetForm.addEventListener(`click`, onbtnResetFormResetPage);
   };
 
   window.form = {

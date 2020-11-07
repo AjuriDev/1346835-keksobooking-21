@@ -2,7 +2,7 @@
 
 (() => {
   const initializeMainPage = () => {
-    window.map.disableMapForm();
+    window.map.initializeMap();
     window.form.initializeAdForm();
   };
 
@@ -14,6 +14,7 @@
   initializeMainPage();
 
   window.main = {
+    initializeMainPage,
     activateMainPage
   };
 })();

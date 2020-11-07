@@ -1,12 +1,13 @@
 'use strict';
+
 (function () {
-  const URL = `https://21.javascript.pages.academy/keksobooking/data`;
+  const URL = `https://21.javascript.pages.academy/keksobooking`;
   const StatusCode = {
     OK: 200
   };
   const TIMEOUT_IN_MS = 10000;
 
-  const downloadAdsInfo = (onSuccess, onError) => {
+  const sendAdForm = (data, onSuccess, onError) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
@@ -19,20 +20,20 @@
     });
 
     xhr.addEventListener(`error`, function () {
-      onError(`Произошла ошибка соединения`);
+      onError();
     });
 
     xhr.addEventListener(`timeout`, function () {
-      onError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
+      onError();
     });
 
     xhr.timeout = TIMEOUT_IN_MS;
 
-    xhr.open(`GET`, URL);
-    xhr.send();
+    xhr.open(`POST`, URL);
+    xhr.send(data);
   };
 
-  window.download = {
-    downloadAdsInfo
+  window.upload = {
+    sendAdForm
   };
 })();

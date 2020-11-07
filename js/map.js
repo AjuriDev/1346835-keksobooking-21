@@ -3,11 +3,13 @@
 (() => {
   const map = window.util.map;
   const pinsList = window.util.pinsList;
-  const pinsFilter = map.querySelector(`.map__filters-container`);
-  const mapFilterFieldsets = pinsFilter.querySelectorAll(`fieldset`);
+  const mapFormContainer = map.querySelector(`.map__filters-container`);
+  const mapForm = mapFormContainer.querySelector(`.map__filters`);
+  const mapFilterFieldsets = mapForm.querySelectorAll(`fieldset`);
   const cardTemplate = document.querySelector(`#card`).content;
   const pinCard = cardTemplate.querySelector(`.map__card`);
   const mainPin = map.querySelector(`.map__pin--main`);
+  const pinsListContent = pinsList.children;
 
   const fillInPinsList = (arr) => {
     pinsList.appendChild(window.util.createFragment(arr, window.pin.renderPin));
@@ -17,6 +19,27 @@
     for (let i = 0; i < mapFilterFieldsets.length; i++) {
       mapFilterFieldsets[i].setAttribute(`disabled`, ``);
     }
+  };
+
+  const resetPinsList = () => {
+    for (let i = pinsListContent.length - 1; i > 1; i--) {
+      pinsListContent[i].remove();
+    }
+  };
+
+  const resetMainPin = () => {
+    mainPin.style = `left: 570px; top: 375px;`;
+    mainPin.removeEventListener(`mousedown`, window.move.onMainPinMove);
+  };
+
+  const initializeMap = () => {
+    mapForm.reset();
+    disableMapForm();
+    pinCard.remove();
+    map.classList.add(`map--faded`);
+    map.removeEventListener(`click`, onMapShowPinCard());
+    resetPinsList();
+    resetMainPin();
   };
 
   const turnOnMapForm = () => {
@@ -29,7 +52,7 @@
     fillInPinsList(arr);
     map.classList.remove(`map--faded`);
     turnOnMapForm();
-    showPinCard(arr);
+    map.addEventListener(`click`, onMapShowPinCard(arr));
     mainPin.addEventListener(`mousedown`, window.move.onMainPinMove);
     window.form.setAdAddress(true);
   };
@@ -46,22 +69,22 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
-  mainPin.addEventListener(`mousedown`, function (evt) {
+  mainPin.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
     if (evt.button === 0) {
       window.download.downloadAdsInfo(window.main.activateMainPage, errorHandler);
     }
   });
 
-  mainPin.addEventListener(`keydown`, function (evt) {
+  mainPin.addEventListener(`keydown`, (evt) => {
     evt.preventDefault();
     if (evt.key === `Enter`) {
       window.download.downloadAdsInfo(window.main.activateMainPage, errorHandler);
     }
   });
 
-  const showPinCard = (arr) => {
-    map.addEventListener(`click`, (evt) => {
+  const onMapShowPinCard = (arr) => {
+    return (evt) => {
       evt.preventDefault();
       const mark = evt.target.closest(`.map__pin`);
       if (mark && !mark.classList.contains(`map__pin--main`)) {
@@ -89,17 +112,16 @@
 
         const markAvatarAlt = mark.querySelector(`img`).alt;
         window.card.renderPinCard(arr.find((pin) => pin.offer.title === markAvatarAlt), pinCard);
-        map.insertBefore(pinCard, pinsFilter);
+        map.insertBefore(pinCard, mapFormContainer);
       }
-    });
+    };
   };
 
   window.map = {
     mainPin,
     pinsList,
-    disableMapForm,
+    initializeMap,
     activateMapForm,
-    showPinCard,
     fillInPinsList
   };
 })();
