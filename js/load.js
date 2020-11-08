@@ -1,14 +1,17 @@
 'use strict';
 (function () {
-  const URL = `https://21.javascript.pages.academy/keksobooking/data`;
+  const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
+  const SEND_URL = `https://21.javascript.pages.academy/keksobooking`;
+  const TIMEOUT_IN_MS = 10000;
+
   const StatusCode = {
     OK: 200
   };
-  const TIMEOUT_IN_MS = 10000;
 
-  const downloadAdsInfo = (onSuccess, onError) => {
+  const getRequest = (onSuccess, onError) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
+    xhr.timeout = TIMEOUT_IN_MS;
 
     xhr.addEventListener(`load`, function () {
       if (xhr.status === StatusCode.OK) {
@@ -26,13 +29,23 @@
       onError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
     });
 
-    xhr.timeout = TIMEOUT_IN_MS;
+    return xhr;
+  };
 
-    xhr.open(`GET`, URL);
+  const getData = (onSuccess, onError) => {
+    const xhr = getRequest(onSuccess, onError);
+    xhr.open(`GET`, DATA_URL);
     xhr.send();
   };
 
-  window.download = {
-    downloadAdsInfo
+  const sendFormData = (data, onSuccess, onError) => {
+    const xhr = getRequest(onSuccess, onError);
+    xhr.open(`POST`, SEND_URL);
+    xhr.send(data);
+  };
+
+  window.load = {
+    getData,
+    sendFormData
   };
 })();

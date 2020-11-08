@@ -159,11 +159,8 @@
     removeMessage(successMessage, onSuccessMessageClick, onSuccessMessageEscClose);
   };
 
-  const onSuccessMessageEscClose = (evt) => {
-    evt.preventDefault();
-    if (evt.key === `Escape`) {
-      removeMessage(successMessage, onSuccessMessageClick, onSuccessMessageEscClose);
-    }
+  const onSuccessMessageEscClose = () => {
+    window.util.isEscEvent(removeMessage(successMessage, onSuccessMessageClick, onSuccessMessageEscClose));
   };
 
   const onErrorMessageClick = (evt) => {
@@ -171,11 +168,8 @@
     removeMessage(errorMessage, onErrorMessageClick, onErrorMessageEscClose);
   };
 
-  const onErrorMessageEscClose = (evt) => {
-    evt.preventDefault();
-    if (evt.key === `Escape`) {
-      removeMessage(errorMessage, onErrorMessageClick, onErrorMessageEscClose);
-    }
+  const onErrorMessageEscClose = () => {
+    window.util.isEscEvent(removeMessage(errorMessage, onErrorMessageClick, onErrorMessageEscClose));
   };
 
   const showSuccessMessage = () => {
@@ -202,7 +196,7 @@
   const onAdFormSubmit = (evt) => {
     evt.preventDefault();
     const form = evt.target.closest(`.ad-form`);
-    window.upload.sendAdForm(new FormData(form), successHandler, errorHandler);
+    window.load.sendFormData(new FormData(form), successHandler, errorHandler);
   };
 
   const activateAdForm = () => {

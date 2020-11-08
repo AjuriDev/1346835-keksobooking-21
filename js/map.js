@@ -72,14 +72,14 @@
   mainPin.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
     if (evt.button === 0) {
-      window.download.downloadAdsInfo(window.main.activateMainPage, errorHandler);
+      window.load.getData(window.main.activateMainPage, errorHandler);
     }
   });
 
   mainPin.addEventListener(`keydown`, (evt) => {
     evt.preventDefault();
     if (evt.key === `Enter`) {
-      window.download.downloadAdsInfo(window.main.activateMainPage, errorHandler);
+      window.load.getData(window.main.activateMainPage, errorHandler);
     }
   });
 

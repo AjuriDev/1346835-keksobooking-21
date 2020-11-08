@@ -12,7 +12,7 @@
     return Math.floor(rand);
   };
 
-  const isEscEvent = function (action) {
+  const isEscEvent = (action) => {
     return (evt) => {
       evt.preventDefault();
       if (evt.keyCode === ESC_KEYCODE) {
@@ -21,7 +21,7 @@
     };
   };
 
-  const isEnterEvent = function (action) {
+  const isEnterEvent = (action) => {
     return (evt) => {
       evt.preventDefault();
       if (evt.keyCode === ENTER_KEYCODE) {
