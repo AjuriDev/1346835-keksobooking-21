@@ -48,7 +48,7 @@
   };
 
   const editFeaturesList = (parent, features) => {
-    if (features.length > 0) {
+    if (features.length) {
       parent.classList.remove(`visually-hidden`);
       const listItem = parent.querySelector(`li`);
       const fragment = document.createDocumentFragment();
@@ -66,7 +66,7 @@
   };
 
   const editGallery = (parent, photos) => {
-    if (photos.length > 0) {
+    if (photos.length) {
       parent.classList.remove(`visually-hidden`);
       const photo = parent.querySelector(`img`);
       const fragment = document.createDocumentFragment();
