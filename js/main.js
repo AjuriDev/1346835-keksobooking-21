@@ -7,7 +7,7 @@
   };
 
   const activateMainPage = (arr) => {
-    window.map.activateMapForm(arr);
+    window.map.activateMap(arr);
     window.form.activateAdForm();
   };
 

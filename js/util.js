@@ -50,10 +50,16 @@
     return array;
   };
 
-  const createFragment = function (array, callback) {
+  const createFragment = function (array, elementNumber, callback) {
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < array.length; i++) {
-      fragment.appendChild(callback(array[i]));
+    if (elementNumber < array.length) {
+      for (let i = 0; i < elementNumber; i++) {
+        fragment.appendChild(callback(array[i]));
+      }
+    } else {
+      for (let i = 0; i < array.length; i++) {
+        fragment.appendChild(callback(array[i]));
+      }
     }
     return fragment;
   };
