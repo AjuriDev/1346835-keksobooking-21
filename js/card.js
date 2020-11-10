@@ -20,8 +20,16 @@
     }
   };
 
+  const map = window.util.map;
+  const cardTemplate = document.querySelector(`#card`).content;
+  const pinCard = cardTemplate.querySelector(`.map__card`);
+  const closePinCard = pinCard.querySelector(`.popup__close`);
+  const mapFormContainer = map.querySelector(`.map__filters-container`);
+
   const editNode = (parent, childClass, property, value) => {
     if (value) {
+      parent.querySelector(`.${childClass}`).classList.remove(`visually-hidden`);
+
       switch (property) {
         case `textContent`:
           parent.querySelector(`.${childClass}`).textContent = value;
@@ -41,6 +49,7 @@
 
   const editFeaturesList = (parent, features) => {
     if (features.length > 0) {
+      parent.classList.remove(`visually-hidden`);
       const listItem = parent.querySelector(`li`);
       const fragment = document.createDocumentFragment();
       for (let i = 0; i < features.length; i++) {
@@ -58,6 +67,7 @@
 
   const editGallery = (parent, photos) => {
     if (photos.length > 0) {
+      parent.classList.remove(`visually-hidden`);
       const photo = parent.querySelector(`img`);
       const fragment = document.createDocumentFragment();
       for (let i = 0; i < photos.length; i++) {
@@ -87,8 +97,45 @@
     editGallery(gallery, pin.offer.photos);
   };
 
+  const removePinCard = () => {
+    pinCard.remove();
+    closePinCard.removeEventListener(`click`, onClosePinCardClick);
+    document.removeEventListener(`keydown`, onClosePinCardEscPress);
+  };
+
+  const onClosePinCardClick = (evt) => {
+    evt.preventDefault();
+    removePinCard();
+  };
+
+  const onClosePinCardEscPress = (evt) => {
+    if (evt.key === `Escape`) {
+      evt.preventDefault();
+      removePinCard();
+    }
+  };
+
+  const onMapShowPinCard = (arr) => {
+    return (evt) => {
+      evt.preventDefault();
+      const mark = evt.target.closest(`.map__pin`);
+      if (mark && !mark.classList.contains(`map__pin--main`)) {
+        closePinCard.addEventListener(`click`, onClosePinCardClick);
+        document.addEventListener(`keydown`, onClosePinCardEscPress);
+
+        const markAvatarAlt = mark.querySelector(`img`).alt;
+        window.card.renderPinCard(arr.find((pin) => pin.offer.title === markAvatarAlt), pinCard);
+        map.insertBefore(pinCard, mapFormContainer);
+      }
+    };
+  };
+
   window.card = {
+    pinCard,
+    mapFormContainer,
     renderPinCard,
+    removePinCard,
+    onMapShowPinCard,
     habitationTypesRu: HABITATION_TYPES_RU
   };
 })();
