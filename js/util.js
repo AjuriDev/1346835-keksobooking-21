@@ -3,6 +3,7 @@
 (() => {
   const ESC_KEYCODE = 27;
   const ENTER_KEYCODE = 13;
+  const DEBOUNCE_INTERVAL = 300; // ms
 
   const map = document.querySelector(`.map`);
   const pinsList = map.querySelector(`.map__pins`);
@@ -64,6 +65,19 @@
     return fragment;
   };
 
+  const debounce = (cb) => {
+    let lastTimeout = null;
+
+    return (...parameters) => {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(() => {
+        cb(...parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
   window.util = {
     getRandomValue,
     isEscEvent,
@@ -72,6 +86,7 @@
     getRandomElement,
     getPartialArray,
     createFragment,
+    debounce,
     map,
     pinsList
   };

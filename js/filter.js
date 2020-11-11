@@ -4,8 +4,37 @@
   const mapForm = window.map.mapForm;
   const pinsList = window.util.pinsList;
   const housingType = mapForm.querySelector(`#housing-type`);
-  const filterValue = {};
+  const housingPrice = mapForm.querySelector(`#housing-price`);
+  const housingRooms = mapForm.querySelector(`#housing-rooms`);
+  const housingGuests = mapForm.querySelector(`#housing-guests`);
+  const filterValue = {
+    'housing-type': `any`,
+    'housing-price': `any`,
+    'housing-rooms': `any`,
+    'housing-guest': `any`
+  };
   let ads = [];
+  const priceMap = {
+    any: {
+      min: ``,
+      max: ``
+    },
+
+    low: {
+      min: 0,
+      max: 9999
+    },
+
+    middle: {
+      min: 10000,
+      max: 49999
+    },
+
+    high: {
+      min: 50000,
+      max: 1000000
+    }
+  };
 
   const fillAds = (arr) => {
     ads = arr;
@@ -15,6 +44,18 @@
     let rank = 0;
 
     if (pin.offer.type === filterValue[`housing-type`]) {
+      rank += 1;
+    }
+
+    if (pin.offer.rooms === Number(filterValue[`housing-rooms`])) {
+      rank += 1;
+    }
+
+    if (pin.offer.guests === Number(filterValue[`housing-guests`])) {
+      rank += 1;
+    }
+
+    if (pin.offer.price > priceMap[filterValue[`housing-price`]].min && pin.offer.price < priceMap[filterValue[`housing-price`]].max) {
       rank += 1;
     }
 
@@ -51,25 +92,40 @@
     filterValue[input.name] = input.value;
   };
 
-  const onSelectTypeChange = () => {
+  const onSelectTypeChange = window.util.debounce(() => {
     changeFilterValue(housingType);
     updatePinsList();
-    // housingType.removeEventListener(`change`, onSelectTypeChange);
-  };
+  });
+
+  const onSelectPriceChange = window.util.debounce(() => {
+    changeFilterValue(housingPrice);
+    updatePinsList();
+  });
+
+  const onSelectRoomsChange = window.util.debounce(() => {
+    changeFilterValue(housingRooms);
+    updatePinsList();
+  });
+
+  const onSelectGuestsChange = window.util.debounce(() => {
+    changeFilterValue(housingGuests);
+    updatePinsList();
+  });
 
   const activateFilter = () => {
     housingType.addEventListener(`change`, onSelectTypeChange);
+    housingPrice.addEventListener(`change`, onSelectPriceChange);
+    housingRooms.addEventListener(`change`, onSelectRoomsChange);
+    housingGuests.addEventListener(`change`, onSelectGuestsChange);
   };
 
   const deactivateFilter = () => {
     housingType.removeEventListener(`change`, onSelectTypeChange);
+    housingPrice.removeEventListener(`change`, onSelectPriceChange);
+    housingRooms.removeEventListener(`change`, onSelectRoomsChange);
+    housingGuests.removeEventListener(`change`, onSelectGuestsChange);
   };
 
-
-  // const onSelectChange = (evt) => {
-  //   const select = evt.target.closest(`select`);
-  //   updatePinsList();
-  // };
 
   window.filter = {
     fillAds,
