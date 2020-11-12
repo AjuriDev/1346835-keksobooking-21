@@ -36,7 +36,7 @@
   };
 
   const activatePinMark = (mark) => {
-    for (let i =  2; i < pinsListContent.length; i++) {
+    for (let i = 2; i < pinsListContent.length; i++) {
       pinsListContent[i].classList.remove(`map__pin--active`);
     }
 
