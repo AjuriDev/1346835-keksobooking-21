@@ -17,8 +17,8 @@
   };
 
   window.pin = {
-    pinSize: PIN_SIZE,
-    pinProtrusionHeight: PIN_PROTRUSION_HEIGHT,
+    PIN_SIZE,
+    PIN_PROTRUSION_HEIGHT,
     renderPin
   };
 })();

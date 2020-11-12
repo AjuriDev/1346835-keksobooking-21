@@ -51,7 +51,7 @@
     return array;
   };
 
-  const createFragment = function (array, elementNumber, callback) {
+  const createFragment = (array, elementNumber, callback) => {
     const fragment = document.createDocumentFragment();
     if (elementNumber < array.length) {
       for (let i = 0; i < elementNumber; i++) {

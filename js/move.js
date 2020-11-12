@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+(() => {
 
   const POSITION_Y_MAX = 630;
   const POSITION_Y_MIN = 130;
@@ -17,7 +17,7 @@
       y: evt.clientY
     };
 
-    const onMouseMove = function (moveEvt) {
+    const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
 
       const shift = {
@@ -28,18 +28,18 @@
       startCoords.x = moveEvt.clientX;
       startCoords.y = moveEvt.clientY;
 
-      if (mainPin.offsetTop + window.pin.pinSize + window.pin.pinProtrusionHeight < POSITION_Y_MIN) {
-        mainPin.style.top = `${POSITION_Y_MIN - window.pin.pinSize - window.pin.pinProtrusionHeight}px`;
-      } else if (mainPin.offsetTop + window.pin.pinSize + window.pin.pinProtrusionHeight > POSITION_Y_MAX) {
-        mainPin.style.top = `${POSITION_Y_MAX - window.pin.pinSize - window.pin.pinProtrusionHeight}px`;
+      if (mainPin.offsetTop + window.pin.PIN_SIZE + window.pin.PIN_PROTRUSION_HEIGHT < POSITION_Y_MIN) {
+        mainPin.style.top = `${POSITION_Y_MIN - window.pin.PIN_SIZE - window.pin.PIN_PROTRUSION_HEIGHT}px`;
+      } else if (mainPin.offsetTop + window.pin.PIN_SIZE + window.pin.PIN_PROTRUSION_HEIGHT > POSITION_Y_MAX) {
+        mainPin.style.top = `${POSITION_Y_MAX - window.pin.PIN_SIZE - window.pin.PIN_PROTRUSION_HEIGHT}px`;
       } else {
         mainPin.style.top = `${mainPin.offsetTop - shift.y}px`;
       }
 
-      if (mainPin.offsetLeft + Math.ceil(window.pin.pinSize / 2) < 0) {
-        mainPin.style.left = `${0 - Math.ceil(window.pin.pinSize / 2)}px`;
-      } else if (mainPin.offsetLeft + Math.ceil(window.pin.pinSize / 2) > pinsListWidth) {
-        mainPin.style.left = `${pinsListWidth - Math.ceil(window.pin.pinSize / 2)}px`;
+      if (mainPin.offsetLeft + Math.ceil(window.pin.PIN_SIZE / 2) < 0) {
+        mainPin.style.left = `${0 - Math.ceil(window.pin.PIN_SIZE / 2)}px`;
+      } else if (mainPin.offsetLeft + Math.ceil(window.pin.PIN_SIZE / 2) > pinsListWidth) {
+        mainPin.style.left = `${pinsListWidth - Math.ceil(window.pin.PIN_SIZE / 2)}px`;
       } else {
         mainPin.style.left = `${mainPin.offsetLeft - shift.x}px`;
       }
@@ -48,7 +48,7 @@
 
     };
 
-    const onMouseUp = function (upEvt) {
+    const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
 
       document.removeEventListener(`mousemove`, onMouseMove);

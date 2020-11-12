@@ -1,12 +1,13 @@
 'use strict';
 
-(function () {
+(() => {
   const mapForm = window.map.mapForm;
   const pinsList = window.util.pinsList;
   const housingType = mapForm.querySelector(`#housing-type`);
   const housingPrice = mapForm.querySelector(`#housing-price`);
   const housingRooms = mapForm.querySelector(`#housing-rooms`);
   const housingGuests = mapForm.querySelector(`#housing-guests`);
+  const housingFeatures = mapForm.querySelector(`#housing-features`);
   const filterValue = {
     'housing-type': `any`,
     'housing-price': `any`,
@@ -14,30 +15,43 @@
     'housing-guest': `any`
   };
   let ads = [];
-  const priceMap = {
-    any: {
-      min: ``,
-      max: ``
+  const features = [];
+  const PriceMap = {
+    ANY: {
+      MIN: ``,
+      MAX: ``
     },
 
-    low: {
-      min: 0,
-      max: 9999
+    LOW: {
+      MIN: 0,
+      MAX: 9999
     },
 
-    middle: {
-      min: 10000,
-      max: 49999
+    MIDDLE: {
+      MIN: 10000,
+      MAX: 49999
     },
 
-    high: {
-      min: 50000,
-      max: 1000000
+    HIGH: {
+      MIN: 50000,
+      MAX: 1000000
     }
   };
 
   const fillAds = (arr) => {
     ads = arr;
+  };
+
+  const getFeatureRank = (pin) => {
+    let rank = 0;
+
+    features.forEach((feature) => {
+      if (pin.offer.features.includes(feature)) {
+        rank += 1;
+      }
+    });
+
+    return rank;
   };
 
   const getAdRank = (pin) => {
@@ -55,9 +69,11 @@
       rank += 1;
     }
 
-    if (pin.offer.price > priceMap[filterValue[`housing-price`]].min && pin.offer.price < priceMap[filterValue[`housing-price`]].max) {
+    if (pin.offer.price > PriceMap[filterValue[`housing-price`].toUpperCase()].MIN && pin.offer.price < PriceMap[filterValue[`housing-price`].toUpperCase()].MAX) {
       rank += 1;
     }
+
+    rank += getFeatureRank(pin);
 
     return rank;
   };
@@ -112,11 +128,35 @@
     updatePinsList();
   });
 
+  const onFieldsetFeaturesChange = window.util.debounce((evt) => {
+    let feature = 0;
+    let inputFeature = 0;
+
+    if (evt.target.classList.contains(`map__feature`)) {
+      feature = evt.target;
+    }
+
+    if (feature) {
+      inputFeature = housingFeatures.querySelector(`#${feature.getAttribute(`for`)}`);
+
+      if (features.includes(inputFeature.value)) {
+        features.splice(features.indexOf(inputFeature.value), 1);
+        inputFeature.removeAttribute(`checked`, `checked`);
+      } else {
+        features.push(inputFeature.value);
+        inputFeature.setAttribute(`checked`, `checked`);
+      }
+
+      updatePinsList();
+    }
+  });
+
   const activateFilter = () => {
     housingType.addEventListener(`change`, onSelectTypeChange);
     housingPrice.addEventListener(`change`, onSelectPriceChange);
     housingRooms.addEventListener(`change`, onSelectRoomsChange);
     housingGuests.addEventListener(`change`, onSelectGuestsChange);
+    housingFeatures.addEventListener(`mousedown`, onFieldsetFeaturesChange);
   };
 
   const deactivateFilter = () => {
@@ -124,6 +164,7 @@
     housingPrice.removeEventListener(`change`, onSelectPriceChange);
     housingRooms.removeEventListener(`change`, onSelectRoomsChange);
     housingGuests.removeEventListener(`change`, onSelectGuestsChange);
+    housingFeatures.removeEventListener(`mousedown`, onFieldsetFeaturesChange);
   };
 
 
