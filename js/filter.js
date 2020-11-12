@@ -37,6 +37,13 @@
       MAX: 1000000
     }
   };
+  const RankMap = {
+    TYPE: 1,
+    PRICE: 1,
+    ROOMS: 1,
+    GUESTS: 1,
+    FEATURES: 1
+  };
 
   const fillAds = (arr) => {
     ads = arr;
@@ -47,7 +54,7 @@
 
     features.forEach((feature) => {
       if (pin.offer.features.includes(feature)) {
-        rank += 1;
+        rank += RankMap.FEATURES;
       }
     });
 
@@ -58,19 +65,19 @@
     let rank = 0;
 
     if (pin.offer.type === filterValue[`housing-type`]) {
-      rank += 1;
+      rank += RankMap.TYPE;
     }
 
     if (pin.offer.rooms === Number(filterValue[`housing-rooms`])) {
-      rank += 1;
+      rank += RankMap.ROOMS;
     }
 
     if (pin.offer.guests === Number(filterValue[`housing-guests`])) {
-      rank += 1;
+      rank += RankMap.GUESTS;
     }
 
     if (pin.offer.price > PriceMap[filterValue[`housing-price`].toUpperCase()].MIN && pin.offer.price < PriceMap[filterValue[`housing-price`].toUpperCase()].MAX) {
-      rank += 1;
+      rank += RankMap.PRICE;
     }
 
     rank += getFeatureRank(pin);
