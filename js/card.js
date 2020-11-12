@@ -120,6 +120,7 @@
       evt.preventDefault();
       const mark = evt.target.closest(`.map__pin`);
       if (mark && !mark.classList.contains(`map__pin--main`)) {
+        window.map.activatePinMark(mark);
         closePinCard.addEventListener(`click`, onClosePinCardClick);
         document.addEventListener(`keydown`, onClosePinCardEscPress);
 

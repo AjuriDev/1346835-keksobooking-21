@@ -35,6 +35,14 @@
     }
   };
 
+  const activatePinMark = (mark) => {
+    for (let i =  2; i < pinsListContent.length; i++) {
+      pinsListContent[i].classList.remove(`map__pin--active`);
+    }
+
+    mark.classList.add(`map__pin--active`);
+  };
+
   const onMainPinClick = (evt) => {
     evt.preventDefault();
     if (evt.button === 0) {
@@ -97,6 +105,7 @@
     initializeMap,
     activateMap,
     fillInPinsList,
-    resetPinsList
+    resetPinsList,
+    activatePinMark
   };
 })();
