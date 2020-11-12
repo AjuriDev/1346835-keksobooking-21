@@ -22,7 +22,7 @@
     window.filter.deactivateFilter();
   };
 
-  const turnOnMapForm = () => {
+  const enableOnMapForm = () => {
     for (let i = 0; i < mapFilterFieldsets.length; i++) {
       mapFilterFieldsets[i].removeAttribute(`disabled`);
     }
@@ -70,7 +70,7 @@
     window.filter.fillAds(arr);
     fillInPinsList(arr);
     map.classList.remove(`map--faded`);
-    turnOnMapForm();
+    enableOnMapForm();
     map.addEventListener(`click`, window.card.onMapShowPinCard(arr));
     mainPin.addEventListener(`mousedown`, window.move.onMainPinMove);
     window.form.setAdAddress(true);

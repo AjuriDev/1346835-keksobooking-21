@@ -17,10 +17,10 @@
   const errorMessage = document.querySelector(`#error`).content.querySelector(`.error`);
   const btnResetForm = adForm.querySelector(`.ad-form__reset`);
 
-  const onbtnResetFormResetPage = (evt) => {
+  const onBtnResetFormResetPage = (evt) => {
     evt.preventDefault();
     window.main.initializeMainPage();
-    btnResetForm.removeEventListener(`click`, onbtnResetFormResetPage);
+    btnResetForm.removeEventListener(`click`, onBtnResetFormResetPage);
   };
 
   const disableAdFormFieldsets = () => {
@@ -35,9 +35,9 @@
 
   const setAdAddress = (active = true) => {
     if (active) {
-      adAddressInput.value = `${Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.PIN_SIZE / 2)}, ${Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.PIN_SIZE + window.pin.PIN_PROTRUSION_HEIGHT)}`;
+      adAddressInput.value = `${Math.round(Number.parseInt(mainPin.style.left.slice(0, -2), 10) + window.pin.PIN_SIZE / 2)}, ${Math.round(Number.parseInt(mainPin.style.top.slice(0, -2), 10) + window.pin.PIN_SIZE + window.pin.PIN_PROTRUSION_HEIGHT)}`;
     } else {
-      adAddressInput.value = `${Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.PIN_SIZE / 2)}, ${Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.PIN_SIZE / 2)}`;
+      adAddressInput.value = `${Math.round(Number.parseInt(mainPin.style.left.slice(0, -2), 10) + window.pin.PIN_SIZE / 2)}, ${Math.round(Number.parseInt(mainPin.style.top.slice(0, -2), 10) + window.pin.PIN_SIZE / 2)}`;
     }
   };
 
@@ -95,8 +95,8 @@
   const synchronizeGuestsToRooms = (guestInput, roomInput) => {
 
     const onGuestInputChangeValue = () => {
-      const room = Number(roomInput.value);
-      const guest = Number(guestInput.value);
+      const room = Number.parseInt(roomInput.value, 10);
+      const guest = Number.parseInt(guestInput.value, 10);
       if (room > MAX_ROOMS_FOR_GUESTS && guest !== 0) {
         guestInput.setCustomValidity(`Выбранное помещение не для гостей`);
       } else if (room <= MAX_ROOMS_FOR_GUESTS && guest === 0) {
@@ -111,8 +111,8 @@
     };
 
     const onRoomsInputChangeValue = () => {
-      const room = Number(roomInput.value);
-      const guest = Number(guestInput.value);
+      const room = Number.parseInt(roomInput.value, 10);
+      const guest = Number.parseInt(guestInput.value, 10);
       const guestInputOptions = guestInput.querySelectorAll(`option`);
 
       if (room < guest && room <= MAX_ROOMS_FOR_GUESTS) {
@@ -131,13 +131,13 @@
 
       if (room <= MAX_ROOMS_FOR_GUESTS) {
         guestInputOptions.forEach((option) => {
-          if (option.value > room || Number(option.value) === 0) {
+          if (option.value > room || Number.parseInt(option.value, 10) === 0) {
             option.setAttribute(`disabled`, `disabled`);
           }
         });
       } else {
         guestInputOptions.forEach((option) => {
-          if (Number(option.value) !== 0) {
+          if (Number.parseInt(option.value, 10) !== 0) {
             option.setAttribute(`disabled`, `disabled`);
           }
         });
@@ -208,7 +208,7 @@
     synchronizeGuestsToRooms(adGuestsInput, adRoomsInput);
     adPriceInput.addEventListener(`input`, onAdPriceInputChangeValue);
     adTypeInput.addEventListener(`input`, onAdTypeInputChangeValue);
-    btnResetForm.addEventListener(`click`, onbtnResetFormResetPage);
+    btnResetForm.addEventListener(`click`, onBtnResetFormResetPage);
   };
 
   window.form = {

@@ -3,7 +3,7 @@
 (() => {
   const ESC_KEYCODE = 27;
   const ENTER_KEYCODE = 13;
-  const DEBOUNCE_INTERVAL = 300; // ms
+  const DEBOUNCE_INTERVAL = 500; // ms
 
   const map = document.querySelector(`.map`);
   const pinsList = map.querySelector(`.map__pins`);

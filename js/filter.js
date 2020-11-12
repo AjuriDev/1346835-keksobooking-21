@@ -68,11 +68,11 @@
       rank += RankMap.TYPE;
     }
 
-    if (pin.offer.rooms === Number(filterValue[`housing-rooms`])) {
+    if (pin.offer.rooms === Number.parseInt(filterValue[`housing-rooms`], 10)) {
       rank += RankMap.ROOMS;
     }
 
-    if (pin.offer.guests === Number(filterValue[`housing-guests`])) {
+    if (pin.offer.guests === Number.parseInt(filterValue[`housing-guests`], 10)) {
       rank += RankMap.GUESTS;
     }
 
