@@ -1,22 +1,22 @@
 'use strict';
 
 (() => {
-  const HABITATION_TYPES_RU = {
-    palace: {
-      name: `Дворец`,
-      minPrice: 10000
+  const HousingTypesRu = {
+    PALACE: {
+      NAME: `Дворец`,
+      MIN_PRICE: 10000
     },
-    flat: {
-      name: `Квартира`,
-      minPrice: 1000
+    FLAT: {
+      NAME: `Квартира`,
+      MIN_PRICE: 1000
     },
-    house: {
-      name: `Дом`,
-      minPrice: 5000
+    HOUSE: {
+      NAME: `Дом`,
+      MIN_PRICE: 5000
     },
-    bungalow: {
-      name: `Бунгало`,
-      minPrice: 0
+    BUNGALOW: {
+      NAME: `Бунгало`,
+      MIN_PRICE: 0
     }
   };
 
@@ -88,7 +88,7 @@
     editNode(card, `popup__title`, `textContent`, pin.offer.title);
     editNode(card, `popup__text--address`, `textContent`, pin.offer.address);
     editNode(card, `popup__text--price`, `textContent`, `${pin.offer.price}₽/ночь`);
-    editNode(card, `popup__type`, `textContent`, `${HABITATION_TYPES_RU[pin.offer.type].name}`);
+    editNode(card, `popup__type`, `textContent`, `${HousingTypesRu[pin.offer.type.toUpperCase()].NAME}`);
     editNode(card, `popup__text--capacity`, `textContent`, `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`);
     editNode(card, `popup__text--time`, `textContent`, `Заезд после ${pin.offer.checkin}, выезд до ${pin.offer.checkout}`);
     editNode(card, `popup__description`, `textContent`, pin.offer.description);
@@ -136,6 +136,6 @@
     renderPinCard,
     removePinCard,
     onMapShowPinCard,
-    habitationTypesRu: HABITATION_TYPES_RU
+    HousingTypesRu
   };
 })();

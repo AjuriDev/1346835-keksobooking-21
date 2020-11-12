@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+(() => {
   const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
   const SEND_URL = `https://21.javascript.pages.academy/keksobooking`;
   const TIMEOUT_IN_MS = 10000;
@@ -13,7 +13,7 @@
     xhr.responseType = `json`;
     xhr.timeout = TIMEOUT_IN_MS;
 
-    xhr.addEventListener(`load`, function () {
+    xhr.addEventListener(`load`, () => {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
       } else {
@@ -21,11 +21,11 @@
       }
     });
 
-    xhr.addEventListener(`error`, function () {
+    xhr.addEventListener(`error`, () => {
       onError(`Произошла ошибка соединения`);
     });
 
-    xhr.addEventListener(`timeout`, function () {
+    xhr.addEventListener(`timeout`, () => {
       onError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
     });
 

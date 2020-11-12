@@ -1,22 +1,86 @@
 'use strict';
 
-(function () {
+(() => {
   const mapForm = window.map.mapForm;
   const pinsList = window.util.pinsList;
   const housingType = mapForm.querySelector(`#housing-type`);
-  const filterValue = {};
+  const housingPrice = mapForm.querySelector(`#housing-price`);
+  const housingRooms = mapForm.querySelector(`#housing-rooms`);
+  const housingGuests = mapForm.querySelector(`#housing-guests`);
+  const housingFeatures = mapForm.querySelector(`#housing-features`);
+  const filterValue = {
+    'housing-type': `any`,
+    'housing-price': `any`,
+    'housing-rooms': `any`,
+    'housing-guest': `any`
+  };
   let ads = [];
+  const features = [];
+  const PriceMap = {
+    ANY: {
+      MIN: ``,
+      MAX: ``
+    },
+
+    LOW: {
+      MIN: 0,
+      MAX: 9999
+    },
+
+    MIDDLE: {
+      MIN: 10000,
+      MAX: 49999
+    },
+
+    HIGH: {
+      MIN: 50000,
+      MAX: 1000000
+    }
+  };
+  const RankMap = {
+    TYPE: 1,
+    PRICE: 1,
+    ROOMS: 1,
+    GUESTS: 1,
+    FEATURES: 1
+  };
 
   const fillAds = (arr) => {
     ads = arr;
+  };
+
+  const getFeatureRank = (pin) => {
+    let rank = 0;
+
+    features.forEach((feature) => {
+      if (pin.offer.features.includes(feature)) {
+        rank += RankMap.FEATURES;
+      }
+    });
+
+    return rank;
   };
 
   const getAdRank = (pin) => {
     let rank = 0;
 
     if (pin.offer.type === filterValue[`housing-type`]) {
-      rank += 1;
+      rank += RankMap.TYPE;
     }
+
+    if (pin.offer.rooms === Number(filterValue[`housing-rooms`])) {
+      rank += RankMap.ROOMS;
+    }
+
+    if (pin.offer.guests === Number(filterValue[`housing-guests`])) {
+      rank += RankMap.GUESTS;
+    }
+
+    if (pin.offer.price > PriceMap[filterValue[`housing-price`].toUpperCase()].MIN && pin.offer.price < PriceMap[filterValue[`housing-price`].toUpperCase()].MAX) {
+      rank += RankMap.PRICE;
+    }
+
+    rank += getFeatureRank(pin);
 
     return rank;
   };
@@ -51,25 +115,65 @@
     filterValue[input.name] = input.value;
   };
 
-  const onSelectTypeChange = () => {
+  const onSelectTypeChange = window.util.debounce(() => {
     changeFilterValue(housingType);
     updatePinsList();
-    // housingType.removeEventListener(`change`, onSelectTypeChange);
-  };
+  });
+
+  const onSelectPriceChange = window.util.debounce(() => {
+    changeFilterValue(housingPrice);
+    updatePinsList();
+  });
+
+  const onSelectRoomsChange = window.util.debounce(() => {
+    changeFilterValue(housingRooms);
+    updatePinsList();
+  });
+
+  const onSelectGuestsChange = window.util.debounce(() => {
+    changeFilterValue(housingGuests);
+    updatePinsList();
+  });
+
+  const onFieldsetFeaturesChange = window.util.debounce((evt) => {
+    let feature = 0;
+    let inputFeature = 0;
+
+    if (evt.target.classList.contains(`map__feature`)) {
+      feature = evt.target;
+    }
+
+    if (feature) {
+      inputFeature = housingFeatures.querySelector(`#${feature.getAttribute(`for`)}`);
+
+      if (features.includes(inputFeature.value)) {
+        features.splice(features.indexOf(inputFeature.value), 1);
+        inputFeature.removeAttribute(`checked`, `checked`);
+      } else {
+        features.push(inputFeature.value);
+        inputFeature.setAttribute(`checked`, `checked`);
+      }
+
+      updatePinsList();
+    }
+  });
 
   const activateFilter = () => {
     housingType.addEventListener(`change`, onSelectTypeChange);
+    housingPrice.addEventListener(`change`, onSelectPriceChange);
+    housingRooms.addEventListener(`change`, onSelectRoomsChange);
+    housingGuests.addEventListener(`change`, onSelectGuestsChange);
+    housingFeatures.addEventListener(`mousedown`, onFieldsetFeaturesChange);
   };
 
   const deactivateFilter = () => {
     housingType.removeEventListener(`change`, onSelectTypeChange);
+    housingPrice.removeEventListener(`change`, onSelectPriceChange);
+    housingRooms.removeEventListener(`change`, onSelectRoomsChange);
+    housingGuests.removeEventListener(`change`, onSelectGuestsChange);
+    housingFeatures.removeEventListener(`mousedown`, onFieldsetFeaturesChange);
   };
 
-
-  // const onSelectChange = (evt) => {
-  //   const select = evt.target.closest(`select`);
-  //   updatePinsList();
-  // };
 
   window.filter = {
     fillAds,

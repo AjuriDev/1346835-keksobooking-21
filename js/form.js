@@ -35,9 +35,9 @@
 
   const setAdAddress = (active = true) => {
     if (active) {
-      adAddressInput.value = `${Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.pinSize / 2)}, ${Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.pinSize + window.pin.pinProtrusionHeight)}`;
+      adAddressInput.value = `${Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.PIN_SIZE / 2)}, ${Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.PIN_SIZE + window.pin.PIN_PROTRUSION_HEIGHT)}`;
     } else {
-      adAddressInput.value = `${Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.pinSize / 2)}, ${Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.pinSize / 2)}`;
+      adAddressInput.value = `${Math.round(Number(mainPin.style.left.slice(0, -2)) + window.pin.PIN_SIZE / 2)}, ${Math.round(Number(mainPin.style.top.slice(0, -2)) + window.pin.PIN_SIZE / 2)}`;
     }
   };
 
@@ -57,8 +57,8 @@
 
   const setInputsValues = () => {
     adTimeOutInput.value = adTimeInInput.value;
-    adPriceInput.min = window.card.habitationTypesRu[adTypeInput.value].minPrice;
-    adPriceInput.placeholder = window.card.habitationTypesRu[adTypeInput.value].minPrice;
+    adPriceInput.min = window.card.HousingTypesRu[adTypeInput.value.toUpperCase()].MIN_PRICE;
+    adPriceInput.placeholder = window.card.HousingTypesRu[adTypeInput.value.toUpperCase()].MIN_PRICE;
     adGuestsInput.value = adRoomsInput.value < MAX_ROOMS_FOR_GUESTS ? adRoomsInput.value : 0;
   };
 
@@ -66,8 +66,8 @@
     const habitationType = adTypeInput.value;
     const adPrice = adPriceInput.value;
 
-    if (adPrice < window.card.habitationTypesRu[habitationType].minPrice) {
-      adPriceInput.setCustomValidity(`Минимальная цена за ночь ${window.card.habitationTypesRu[habitationType].minPrice}р`);
+    if (adPrice < window.card.HousingTypesRu[habitationType.toUpperCase()].MIN_PRICE) {
+      adPriceInput.setCustomValidity(`Минимальная цена за ночь ${window.card.HousingTypesRu[habitationType.toUpperCase()].MIN_PRICE}р`);
     } else {
       adPriceInput.setCustomValidity(``);
     }
@@ -78,21 +78,21 @@
   const onAdTypeInputChangeValue = () => {
     const habitationType = adTypeInput.value;
 
-    adPriceInput.min = window.card.habitationTypesRu[habitationType].minPrice;
-    adPriceInput.placeholder = window.card.habitationTypesRu[habitationType].minPrice;
+    adPriceInput.min = window.card.HousingTypesRu[habitationType.toUpperCase()].MIN_PRICE;
+    adPriceInput.placeholder = window.card.HousingTypesRu[habitationType.toUpperCase()].MIN_PRICE;
   };
 
-  const synchronizeTimeInputs = function (firstInput, secondInput) {
-    firstInput.addEventListener(`change`, function () {
+  const synchronizeTimeInputs = (firstInput, secondInput) => {
+    firstInput.addEventListener(`change`, () => {
       secondInput.selectedIndex = firstInput.selectedIndex;
     });
 
-    secondInput.addEventListener(`change`, function () {
+    secondInput.addEventListener(`change`, () => {
       firstInput.selectedIndex = secondInput.selectedIndex;
     });
   };
 
-  const synchronizeGuestsToRooms = function (guestInput, roomInput) {
+  const synchronizeGuestsToRooms = (guestInput, roomInput) => {
 
     const onGuestInputChangeValue = () => {
       const room = Number(roomInput.value);
