@@ -1,51 +1,50 @@
 'use strict';
-(() => {
-  const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
-  const SEND_URL = `https://21.javascript.pages.academy/keksobooking`;
-  const TIMEOUT_IN_MS = 10000;
 
-  const StatusCode = {
-    OK: 200
-  };
+const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
+const SEND_URL = `https://21.javascript.pages.academy/keksobooking`;
+const TIMEOUT_IN_MS = 10000;
 
-  const getRequest = (onSuccess, onError) => {
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = `json`;
-    xhr.timeout = TIMEOUT_IN_MS;
+const StatusCode = {
+  OK: 200
+};
 
-    xhr.addEventListener(`load`, () => {
-      if (xhr.status === StatusCode.OK) {
-        onSuccess(xhr.response);
-      } else {
-        onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
-      }
-    });
+const getRequest = (onSuccess, onError) => {
+  const xhr = new XMLHttpRequest();
+  xhr.responseType = `json`;
+  xhr.timeout = TIMEOUT_IN_MS;
 
-    xhr.addEventListener(`error`, () => {
-      onError(`Произошла ошибка соединения`);
-    });
+  xhr.addEventListener(`load`, () => {
+    if (xhr.status === StatusCode.OK) {
+      onSuccess(xhr.response);
+    } else {
+      onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+    }
+  });
 
-    xhr.addEventListener(`timeout`, () => {
-      onError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
-    });
+  xhr.addEventListener(`error`, () => {
+    onError(`Произошла ошибка соединения`);
+  });
 
-    return xhr;
-  };
+  xhr.addEventListener(`timeout`, () => {
+    onError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
+  });
 
-  const getData = (onSuccess, onError) => {
-    const xhr = getRequest(onSuccess, onError);
-    xhr.open(`GET`, DATA_URL);
-    xhr.send();
-  };
+  return xhr;
+};
 
-  const sendFormData = (data, onSuccess, onError) => {
-    const xhr = getRequest(onSuccess, onError);
-    xhr.open(`POST`, SEND_URL);
-    xhr.send(data);
-  };
+const getData = (onSuccess, onError) => {
+  const xhr = getRequest(onSuccess, onError);
+  xhr.open(`GET`, DATA_URL);
+  xhr.send();
+};
 
-  window.load = {
-    getData,
-    sendFormData
-  };
-})();
+const sendFormData = (data, onSuccess, onError) => {
+  const xhr = getRequest(onSuccess, onError);
+  xhr.open(`POST`, SEND_URL);
+  xhr.send(data);
+};
+
+window.load = {
+  getData,
+  sendFormData
+};

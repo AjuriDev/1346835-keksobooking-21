@@ -1,20 +1,18 @@
 'use strict';
 
-(() => {
-  const initializeMainPage = () => {
-    window.map.initializeMap();
-    window.form.initializeAdForm();
-  };
+const initializeMainPage = () => {
+  window.map.initializeMap();
+  window.form.initializeAdForm();
+};
 
-  const activateMainPage = (arr) => {
-    window.map.activateMap(arr);
-    window.form.activateAdForm();
-  };
+const activateMainPage = (arr) => {
+  window.map.activateMap(arr);
+  window.form.activateAdForm();
+};
 
-  initializeMainPage();
+initializeMainPage();
 
-  window.main = {
-    initializeMainPage,
-    activateMainPage
-  };
-})();
+window.main = {
+  initializeMainPage,
+  activateMainPage
+};
